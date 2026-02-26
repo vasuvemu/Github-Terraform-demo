@@ -35,4 +35,29 @@ jobs:
               run: terraform validate
             - name: Terraform plan
               run: terraform plan -var-file=dev.tfvars
+    apply:
+        runs-on: ubuntu-latest
+        if: github.event_name == 'push'
+        defaults:
+            run:
+                working-directory: dev
+        steps:
+            - name: Check Repo
+              uses: actions/checkout@v4
+            - name: Setup Terraform
+              uses: hashicorp/setup-terraform@v3
+              with:
+                terraform_version: 1.8.5
+            - name: AWS access using OIDC
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                role-to-assume: arn:aws:iam::682331715756:role/prasad-oidc-role
+                role-session-name: github-actions
+                aws-region: ap-south-1
+            - name: Terraform init
+              run: terraform init
+            - name: Terraform Apply
+              run: terraform apply -auto-approve -var-file=dev.tfvars
+
+              
     

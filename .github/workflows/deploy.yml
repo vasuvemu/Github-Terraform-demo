@@ -11,7 +11,7 @@ permissions:
     contents: read
 jobs:
     plan:
-        runs-on: ubuntu-latest
+        runs-on: self-hosted
         if: github.event_name == 'pull'
         defaults:
             run:
@@ -36,7 +36,7 @@ jobs:
             - name: Terraform plan
               run: terraform plan -var-file=dev.tfvars
     apply:
-        runs-on: ubuntu-latest
+        runs-on: self-hosted
         if: github.event_name == 'push'
         defaults:
             run:
